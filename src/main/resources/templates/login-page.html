@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insight Software Portals - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            max-width: 1000px;
+            width: 100%;
+            display: flex;
+            min-height: 600px;
+        }
+
+        .login-left {
+            flex: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+
+        .login-left h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .login-left p {
+            font-size: 16px;
+            opacity: 0.9;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .logo-section {
+            margin-bottom: 40px;
+        }
+
+        .logo-text {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+        }
+
+        .features {
+            margin-top: 40px;
+            text-align: left;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .feature-item::before {
+            content: "✓";
+            margin-right: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .login-right {
+            flex: 1;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-header {
+            margin-bottom: 40px;
+        }
+
+        .login-header h2 {
+            font-size: 28px;
+            color: #1e293b;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .login-header p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #334155;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            color: #64748b;
+        }
+
+        .remember-me input {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .alert {
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.6;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+
+        .alert small {
+            opacity: 0.8;
+            font-size: 12px;
+        }
+
+        .alert-danger {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 2px solid #fecaca;
+            border-left: 4px solid #dc2626;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 2px solid #a7f3d0;
+            border-left: 4px solid #10b981;
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border: 2px solid #fde68a;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            position: relative;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 30px;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        .footer-text a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+            }
+
+            .login-left {
+                padding: 40px 30px;
+            }
+
+            .login-right {
+                padding: 40px 30px;
+            }
+
+            .login-left h1 {
+                font-size: 24px;
+            }
+
+            .logo-text {
+                font-size: 36px;
+            }
+        }
+
+        /* Loading animation */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .btn-login.loading::after {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 50%;
+            margin-left: -8px;
+            margin-top: -8px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 0.6s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Left Side - Branding -->
+        <div class="login-left">
+            <div class="logo-section">
+                <div class="logo-text">Insight</div>
+                <h1>Software Portals</h1>
+            </div>
+            <p>新世代數位解決方案商</p>
+            <p>引領雲端與Web3.0未來的科技先驅</p>
+            
+            <div class="features">
+                <div class="feature-item">雲端運算與 AI 技術整合</div>
+                <div class="feature-item">企業級安全防護機制</div>
+                <div class="feature-item">多平台管理控制中心</div>
+                <div class="feature-item">即時監控與分析報表</div>
+            </div>
+        </div>
+
+        <!-- Right Side - Login Form -->
+        <div class="login-right">
+            <div class="login-header">
+                <h2>歡迎回來</h2>
+                <p>請登入您的帳號以繼續</p>
+            </div>
+
+            <!-- Error Message -->
+            <div th:if="${param.error}" class="alert alert-danger">
+                <strong>⚠️ 登入失敗</strong><br>
+                <span th:if="${session.SPRING_SECURITY_LAST_EXCEPTION}">
+                    <span th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}"></span>
+                </span>
+                <span th:unless="${session.SPRING_SECURITY_LAST_EXCEPTION}">
+                    帳號或密碼錯誤，請檢查後重試
+                </span>
+                <br><small>請確認：帳號和密碼區分大小寫</small>
+            </div>
+
+            <!-- Invalid Session Message -->
+            <div th:if="${param.invalid}" class="alert alert-danger">
+                <strong>⚠️ 會話已過期</strong><br>
+                您的登入會話已過期，請重新登入
+            </div>
+
+            <!-- Access Denied Message -->
+            <div th:if="${param.denied}" class="alert alert-danger">
+                <strong>⚠️ 存取被拒絕</strong><br>
+                您沒有權限訪問該頁面，請使用正確的帳號登入
+            </div>
+
+            <!-- Logout Success Message -->
+            <div th:if="${param.logout}" class="alert alert-success">
+                <strong>✓ 登出成功</strong><br>
+                您已安全登出系統，感謝使用
+            </div>
+
+            <!-- Account Locked Message -->
+            <div th:if="${param.locked}" class="alert alert-danger">
+                <strong>🔒 帳號已鎖定</strong><br>
+                您的帳號已被鎖定，請聯絡系統管理員
+            </div>
+
+            <!-- Login Form -->
+            <form th:action="@{/perform_login}" method="post">
+                
+                <div class="form-group">
+                    <label for="username">使用者帳號</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        class="form-control" 
+                        placeholder="請輸入您的帳號"
+                        required 
+                        autofocus
+                        autocomplete="username"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="password">密碼</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-control" 
+                        placeholder="請輸入您的密碼"
+                        required
+                        autocomplete="current-password"
+                    />
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember-me" />
+                        記住我
+                    </label>
+                    <a href="#" class="forgot-password">忘記密碼？</a>
+                </div>
+
+                <button type="submit" class="btn-login">
+                    登入系統
+                </button>
+            </form>
+
+            <div class="divider">
+                <span>或</span>
+            </div>
+
+            <div class="footer-text">
+                <div class="default-accounts">
+                    <strong>預設測試帳號</strong><br>
+                    <div style="margin-top: 8px; padding: 10px; background: #f8fafc; border-radius: 6px; text-align: left;">
+                        <div style="margin-bottom: 5px;">
+                            👤 主要管理員：<code style="background: white; padding: 2px 6px; border-radius: 4px;">admin</code> / <code style="background: white; padding: 2px 6px; border-radius: 4px;">admin123</code>
+                        </div>
+                        <div>
+                            👤 平台管理員：<code style="background: white; padding: 2px 6px; border-radius: 4px;">platform_admin</code> / <code style="background: white; padding: 2px 6px; border-radius: 4px;">platform123</code>
+                        </div>
+                    </div>
+                </div>
+                <small style="margin-top: 15px; display: block;">
+                    © 2025 <a href="https://www.insight-software.com/" target="_blank">兌心科技有限公司 Insight Software</a>
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add loading state to button on submit
+        document.querySelector('form').addEventListener('submit', function(e) {
+            // Check if fields are filled
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                e.preventDefault();
+                showError('請填寫帳號和密碼');
+                return false;
+            }
+
+            const btn = this.querySelector('.btn-login');
+            btn.classList.add('loading');
+            btn.disabled = true;
+            btn.textContent = '驗證中...';
+        });
+
+        // Show custom error message
+        function showError(message) {
+            // Remove existing custom errors
+            const existingError = document.querySelector('.custom-error');
+            if (existingError) {
+                existingError.remove();
+            }
+
+            // Create error alert
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'alert alert-danger custom-error';
+            errorDiv.innerHTML = '<strong>⚠️ 輸入錯誤</strong><br>' + message;
+            
+            // Insert before form
+            const form = document.querySelector('form');
+            form.parentNode.insertBefore(errorDiv, form);
+
+            // Auto-hide after 5 seconds
+            setTimeout(function() {
+                errorDiv.style.transition = 'opacity 0.5s';
+                errorDiv.style.opacity = '0';
+                setTimeout(function() {
+                    errorDiv.remove();
+                }, 500);
+            }, 5000);
+        }
+
+        // Auto-hide alerts after 8 seconds (increased from 5)
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert:not(.custom-error)');
+            alerts.forEach(function(alert) {
+                alert.style.transition = 'opacity 0.5s';
+                alert.style.opacity = '0';
+                setTimeout(function() {
+                    alert.remove();
+                }, 500);
+            });
+        }, 8000);
+
+        // Input field validation feedback
+        const usernameField = document.getElementById('username');
+        const passwordField = document.getElementById('password');
+
+        usernameField.addEventListener('blur', function() {
+            if (this.value.trim() === '') {
+                this.style.borderColor = '#ef4444';
+            } else {
+                this.style.borderColor = '#10b981';
+            }
+        });
+
+        usernameField.addEventListener('focus', function() {
+            this.style.borderColor = '#667eea';
+        });
+
+        passwordField.addEventListener('blur', function() {
+            if (this.value.trim() === '') {
+                this.style.borderColor = '#ef4444';
+            } else {
+                this.style.borderColor = '#10b981';
+            }
+        });
+
+        passwordField.addEventListener('focus', function() {
+            this.style.borderColor = '#667eea';
+        });
+
+        // Show password toggle
+        const showPasswordToggle = document.createElement('button');
+        showPasswordToggle.type = 'button';
+        showPasswordToggle.innerHTML = '👁️';
+        showPasswordToggle.style.cssText = 'position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 18px; opacity: 0.6; transition: opacity 0.3s;';
+        
+        const passwordGroup = passwordField.parentElement;
+        passwordGroup.style.position = 'relative';
+        passwordGroup.appendChild(showPasswordToggle);
+
+        showPasswordToggle.addEventListener('mouseenter', function() {
+            this.style.opacity = '1';
+        });
+
+        showPasswordToggle.addEventListener('mouseleave', function() {
+            this.style.opacity = '0.6';
+        });
+
+        showPasswordToggle.addEventListener('click', function() {
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                this.innerHTML = '🙈';
+            } else {
+                passwordField.type = 'password';
+                this.innerHTML = '👁️';
+            }
+        });
+    </script>
+</body>
+</html>
+

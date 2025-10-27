@@ -1,0 +1,14 @@
+# Development profile configuration
+# Uses in-memory rate limiter instead of Redis
+
+logging:
+  level:
+    com.example: DEBUG
+    org.springframework.data.redis: INFO
+
+# Disable Redis auto-configuration for dev profile
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration

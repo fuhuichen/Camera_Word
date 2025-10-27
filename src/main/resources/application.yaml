@@ -1,0 +1,101 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: camera-cloud
+  
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+  
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/camera_cloud}
+    username: ${DB_USERNAME:camera_user}
+    password: ${DB_PASSWORD:camera_pass}
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    open-in-view: false
+  
+  redis:
+    host: ${SPRING_REDIS_HOST:${REDIS_HOST:localhost}}
+    port: ${SPRING_REDIS_PORT:${REDIS_PORT:6379}}
+    password: ${SPRING_REDIS_PASSWORD:${REDIS_PASSWORD:}}
+    timeout: 2000ms
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+  
+  security:
+    user:
+      name: admin
+      password: ${ADMIN_PASSWORD:admin123}
+      roles: MAIN_ADMIN
+
+# Application specific configuration
+app:
+  rate:
+    window-seconds: 60
+  upload:
+    max-file-size: 10MB
+    max-request-size: 10MB
+    allowed-extensions: xlsx,csv
+
+# Logging
+logging:
+  level:
+    com.example.cameracloud: INFO
+    org.springframework.security: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Management endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+---
+# Development profile
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password: 
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+
+logging:
+  level:
+    com.example.cameracloud: DEBUG

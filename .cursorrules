@@ -1,0 +1,212 @@
+# AI Picture Book Project - Cursor Rules
+
+## Project Overview
+This is an AI-powered interactive picture book platform with bilingual support (Chinese/English), bopomofo, and TTS features. The project follows spec-driven development with OpenAPI contracts, Gherkin acceptance tests, and a monorepo structure.
+
+## Tech Stack
+- **Frontend**: Next.js 14 (App Router) + Tailwind CSS + PWA + Zustand
+- **Backend**: NestJS (Node 20) + PostgreSQL 16 + Redis (BullMQ)
+- **Storage**: S3-compatible (minio/dev, AWS/prod)
+- **AI Services**: LLM, Image Generation (SDXL/Flux), TTS (Azure/ElevenLabs/Google)
+- **Auth**: Clerk/Auth.js (Line Login + Email)
+- **Monitoring**: OpenTelemetry + Grafana/Loki
+
+## Code Style & Standards
+
+### TypeScript/JavaScript
+- Use strict TypeScript with proper type definitions
+- Prefer functional components with hooks over class components
+- Use async/await over Promises
+- Implement proper error handling with try-catch blocks
+- Use Zod for runtime validation and type safety
+- Follow the existing naming conventions (camelCase for variables, PascalCase for components)
+
+### React/Next.js
+- Use App Router patterns (app directory structure)
+- Implement proper loading states and error boundaries
+- Use Server Components when possible, Client Components only when necessary
+- Follow Next.js 14 best practices for performance optimization
+- Use Tailwind CSS for styling with consistent design tokens
+- Implement proper accessibility (a11y) features
+
+### API Development
+- Follow OpenAPI 3.0.3 specification
+- Use proper HTTP status codes and error responses
+- Implement rate limiting and proper validation
+- Use BullMQ for background job processing
+- Follow RESTful API conventions
+- Implement proper logging and monitoring
+
+### Database
+- Use PostgreSQL with proper indexing
+- Implement soft deletes where appropriate
+- Use transactions for data consistency
+- Follow the existing schema patterns (stories, pages, assets, user_progress, jobs tables)
+- Use pgvector for embeddings when needed
+
+## File Organization
+
+### Monorepo Structure
+```
+apps/
+  web/ (Next.js frontend)
+  worker/ (BullMQ workers)
+  api/ (NestJS backend)
+packages/
+  ui/ (shared components)
+  prompts/ (AI prompt templates)
+  schema/ (Zod schemas and DDL)
+  sdk/ (TypeScript client)
+infra/
+  docker/ (Docker configurations)
+  cdk/ (Infrastructure as Code)
+```
+
+### Naming Conventions
+- Files: kebab-case for directories, PascalCase for React components, camelCase for utilities
+- Database: snake_case for tables and columns
+- API endpoints: kebab-case for paths
+- Environment variables: SCREAMING_SNAKE_CASE
+
+## AI Integration Patterns
+
+### Prompt Engineering
+- Store prompts in `/packages/prompts/rules/` directory
+- Use structured prompts with clear parameters and constraints
+- Implement prompt versioning and A/B testing capabilities
+- Follow the existing prompt templates for story generation, SSML, and image generation
+
+### Content Safety
+- Implement content moderation for both text and images
+- Use the existing safety rules and flagging system
+- Ensure child-safe content generation
+- Implement proper content review workflows
+
+### Performance Optimization
+- Cache generated content (images, TTS audio) in S3
+- Implement proper queue management for AI generation tasks
+- Use CDN for static assets
+- Optimize for PWA performance (LCP < 2.5s, TTFB < 200ms)
+
+## Development Workflow
+
+### Spec-Driven Development
+1. Define API contracts in OpenAPI specification first
+2. Generate mock server using Prism
+3. Write Gherkin acceptance tests
+4. Implement backend API endpoints
+5. Implement frontend components
+6. Run contract tests to ensure compliance
+
+### Testing Strategy
+- Unit tests for business logic
+- Integration tests for API endpoints
+- E2E tests using Playwright
+- Contract tests using Dredd or Schemathesis
+- Load testing for performance validation
+
+### Code Quality
+- Use ESLint and Prettier for code formatting
+- Implement proper TypeScript strict mode
+- Use Husky for pre-commit hooks
+- Follow the existing error handling patterns
+- Implement proper logging and monitoring
+
+## Security & Compliance
+
+### Data Protection
+- Implement proper data encryption (at rest and in transit)
+- Follow GDPR compliance for user data
+- Implement proper authentication and authorization
+- Use secure environment variable management
+
+### Child Safety
+- Implement content moderation for all generated content
+- Ensure parental consent for child users
+- Implement data minimization principles
+- Follow child protection regulations
+
+## Performance & Monitoring
+
+### Metrics to Track
+- Generation success rates (target: ≥90%)
+- Average generation time (target: ≤2 minutes)
+- User engagement metrics (NPS ≥40, return rate ≥50%)
+- Cost per page generation
+- Cache hit rates (target: ≥60%)
+
+### Error Handling
+- Implement proper error boundaries
+- Use structured logging with correlation IDs
+- Implement retry mechanisms for AI services
+- Monitor and alert on critical failures
+
+## Common Patterns
+
+### API Response Format
+```typescript
+interface ApiResponse<T> {
+  data?: T;
+  error?: {
+    code: string;
+    message: string;
+    traceId: string;
+    details?: Record<string, any>;
+  };
+}
+```
+
+### Database Entity Pattern
+```typescript
+interface BaseEntity {
+  id: string;
+  created_at: Date;
+  updated_at: Date;
+}
+```
+
+### AI Generation Job Pattern
+```typescript
+interface GenerationJob {
+  id: string;
+  kind: 'outline' | 'page_expand' | 'illustrate' | 'tts';
+  payload: Record<string, any>;
+  status: 'queued' | 'processing' | 'done' | 'failed';
+  cost_cents: number;
+  duration_ms: number;
+}
+```
+
+## Best Practices
+
+1. **Always validate input data** using Zod schemas
+2. **Implement proper error handling** with user-friendly messages
+3. **Use TypeScript strictly** - avoid `any` types
+4. **Follow the existing patterns** for consistency
+5. **Write tests** for new features
+6. **Document API changes** in OpenAPI spec
+7. **Use proper logging** for debugging and monitoring
+8. **Implement proper caching** for performance
+9. **Follow security best practices** for user data
+10. **Optimize for mobile** and PWA experience
+
+## AI-Specific Guidelines
+
+- Always implement content safety checks before generation
+- Use proper prompt engineering techniques
+- Implement cost tracking for AI services
+- Cache generated content to reduce costs
+- Implement proper fallback mechanisms for AI service failures
+- Use structured data formats for AI inputs/outputs
+- Implement proper rate limiting for AI API calls
+
+## When Making Changes
+
+1. **Update OpenAPI spec** if changing API contracts
+2. **Update Gherkin tests** if changing business logic
+3. **Update database schema** if changing data models
+4. **Update prompts** if changing AI generation logic
+5. **Run tests** before committing changes
+6. **Update documentation** for significant changes
+7. **Consider performance impact** of changes
+8. **Ensure backward compatibility** when possible

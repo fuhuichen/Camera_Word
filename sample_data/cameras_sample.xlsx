@@ -1,0 +1,6 @@
+camera_id,platform_code,model,status
+CAM_001,youtube,Camera Model A,ACTIVE
+CAM_002,twitch,Camera Model B,ACTIVE
+CAM_003,facebook,Camera Model C,ACTIVE
+CAM_004,youtube,Camera Model D,DISABLED
+CAM_005,twitch,Camera Model E,ACTIVE
