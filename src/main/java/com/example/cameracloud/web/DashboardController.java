@@ -9,7 +9,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -76,43 +75,39 @@ public class DashboardController {
         return "dashboard";
     }
     
-    @GetMapping("/dashboard/platform")
-    public String platformManagement(Authentication authentication, Model model, 
-                                   @RequestParam(required = false) String platformCode) {
-        String username = authentication != null ? authentication.getName() : "Guest";
-        String role = authentication != null ? authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .map(r -> r.replace("ROLE_", ""))
-                .collect(Collectors.joining(", ")) : "GUEST";
-        
-        // Get all platforms for selection
-        List<Platform> allPlatforms = platformService.findAll();
-        
-        // Get platform info if platform is selected
-        PlatformService.PlatformInfoResponse platformInfo = null;
-        List<Camera> platformCameras = null;
-        
-        if (platformCode != null && !platformCode.isEmpty()) {
-            try {
-                platformInfo = platformService.getPlatformInfo(platformCode);
-                platformCameras = cameraService.findWithFilters(platformCode, null, null, null);
-            } catch (Exception e) {
-                // Platform not found, continue with null values
-            }
+    @GetMapping("/platforms")
+    public String platforms(Authentication authentication, Model model) {
+        if (authentication == null) {
+            return "redirect:/login";
         }
         
-        // Add attributes to model
+        String username = authentication.getName();
+        String role = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .map(r -> r.replace("ROLE_", ""))
+                .collect(Collectors.joining(", "));
+        
+        // Get platform information
+        List<Platform> allPlatforms = platformService.findAll();
+        List<Platform> activePlatforms = platformService.findAllActive();
+        
+        // Get camera statistics for each platform
+        List<Camera> allCameras = cameraService.findWithFilters(null, null, null, null);
+        List<Camera> activeCameras = cameraService.findWithFilters(null, Camera.CameraStatus.ACTIVE, null, null);
+        
         model.addAttribute("username", username);
         model.addAttribute("role", role);
-        model.addAttribute("allPlatforms", allPlatforms);
-        model.addAttribute("selectedPlatformCode", platformCode);
-        model.addAttribute("platformInfo", platformInfo);
-        model.addAttribute("platformCameras", platformCameras);
+        model.addAttribute("platforms", allPlatforms);
+        model.addAttribute("activePlatforms", activePlatforms);
+        model.addAttribute("totalCameras", allCameras.size());
+        model.addAttribute("activeCameras", activeCameras.size());
         
-        return "dashboard";
+        return "platforms";
     }
     
+    @GetMapping("/dashboard/platform")
+    public String dashboardPlatform(Authentication authentication, Model model) {
+        // Redirect to the platforms page
+        return "redirect:/platforms";
+    }
 }
-
-
-
