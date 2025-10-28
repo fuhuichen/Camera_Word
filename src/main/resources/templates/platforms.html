@@ -164,6 +164,12 @@
             margin-bottom: 2rem;
         }
 
+        .platform-card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
         .platform-card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -172,11 +178,29 @@
             box-shadow: var(--shadow-lg);
             transition: all 0.3s ease;
             border: 1px solid var(--border-color);
+            position: relative;
         }
 
         .platform-card:hover {
             transform: translateY(-4px);
             box-shadow: var(--shadow-xl);
+        }
+
+        .platform-card-footer {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: var(--primary-color);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .platform-card:hover .platform-card-footer {
+            color: var(--secondary-color);
         }
 
         .platform-header {
@@ -238,11 +262,31 @@
             text-decoration: underline;
         }
 
-        .platform-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
+        .platform-actions {
             margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn-detail {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-detail:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            color: white;
         }
 
         .stat-item {
@@ -287,6 +331,13 @@
         }
 
         /* Responsive */
+        @media (min-width: 768px) {
+            .platforms-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+        }
+
         @media (max-width: 768px) {
             .container {
                 margin: 1rem auto;
@@ -304,10 +355,89 @@
 
             .platforms-grid {
                 grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
 
-            .platform-stats {
-                grid-template-columns: 1fr;
+            .platform-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .btn-action {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--light-color);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .platform-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--light-color);
+            border-radius: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        @media (max-width: 480px) {
+            .platforms-grid {
+                gap: 1rem;
+            }
+            
+            .platform-card {
+                padding: 1rem;
             }
         }
     </style>
@@ -383,11 +513,11 @@
 
                 <div class="platform-stats">
                     <div class="stat-item">
-                        <div class="stat-value" th:text="${totalCameras}">5</div>
+                        <div class="stat-value" th:text="${totalCameras}">0</div>
                         <div class="stat-label">總相機數</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-value" th:text="${activeCameras}">3</div>
+                        <div class="stat-value" th:text="${activeCameras}">0</div>
                         <div class="stat-label">活躍相機</div>
                     </div>
                 </div>
@@ -405,6 +535,7 @@
                 }
             });
         });
+
     </script>
 </body>
 </html>

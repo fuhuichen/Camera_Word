@@ -65,4 +65,22 @@ public class CameraService {
             cameraRepository.save(camera);
         }
     }
+    
+    @Transactional
+    public void updateStatus(String publicId, Camera.CameraStatus status) {
+        Optional<Camera> cameraOpt = cameraRepository.findByPublicId(publicId);
+        if (cameraOpt.isPresent()) {
+            Camera camera = cameraOpt.get();
+            camera.setStatus(status);
+            cameraRepository.save(camera);
+        }
+    }
+    
+    @Transactional
+    public void deleteByPublicId(String publicId) {
+        Optional<Camera> cameraOpt = cameraRepository.findByPublicId(publicId);
+        if (cameraOpt.isPresent()) {
+            cameraRepository.delete(cameraOpt.get());
+        }
+    }
 }

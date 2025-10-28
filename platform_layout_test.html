@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>平台管理佈局測試</title>
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --info-color: #3b82f6;
+            --dark-color: #1e293b;
+            --light-color: #f8fafc;
+            --border-color: #e2e8f0;
+            --text-muted: #64748b;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            min-height: 100vh;
+            color: var(--dark-color);
+            margin: 0;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* Platform Cards - 新的佈局設定 */
+        .platforms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .platform-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .platform-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .platform-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .platform-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+
+        .platform-code {
+            background: var(--light-color);
+            color: var(--text-muted);
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .platform-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-disabled {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+
+        .platform-info {
+            margin-bottom: 1rem;
+        }
+
+        .platform-description {
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .platform-website {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .platform-website:hover {
+            text-decoration: underline;
+        }
+
+        .platform-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--light-color);
+            border-radius: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* 響應式設計 */
+        @media (min-width: 1400px) {
+            .platforms-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .platforms-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 1.25rem;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .platforms-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .platforms-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .platform-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .layout-info {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .layout-info h3 {
+            margin: 0 0 0.5rem 0;
+            color: var(--primary-color);
+        }
+
+        .layout-info p {
+            margin: 0;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">平台管理佈局測試</h1>
+            <p class="page-subtitle">新的響應式卡片佈局 - 一個row可以放多個卡片</p>
+        </div>
+
+        <div class="layout-info">
+            <h3>佈局說明</h3>
+            <p>• 大螢幕 (≥1400px): 每行可放 4-5 個卡片 (280px 最小寬度)</p>
+            <p>• 中等螢幕 (1200px): 每行可放 3-4 個卡片 (280px 最小寬度)</p>
+            <p>• 小螢幕 (900px): 每行可放 2-3 個卡片 (250px 最小寬度)</p>
+            <p>• 手機螢幕 (≤768px): 每行 1 個卡片 (全寬)</p>
+        </div>
+
+        <div class="platforms-grid">
+            <!-- 平台卡片 1 -->
+            <div class="platform-card">
+                <div class="platform-header">
+                    <div>
+                        <div class="platform-name">DK 平台</div>
+                        <div class="platform-code">DK</div>
+                    </div>
+                    <div class="platform-status status-active">啟用中</div>
+                </div>
+                
+                <div class="platform-info">
+                    <p class="platform-description">專業的串流平台，提供高品質的視訊服務</p>
+                    <a href="#" class="platform-website">官方網站</a>
+                </div>
+
+                <div class="platform-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">總相機數</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">活躍相機</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 平台卡片 2 -->
+            <div class="platform-card">
+                <div class="platform-header">
+                    <div>
+                        <div class="platform-name">兑心平台</div>
+                        <div class="platform-code">DUIXIN</div>
+                    </div>
+                    <div class="platform-status status-active">啟用中</div>
+                </div>
+                
+                <div class="platform-info">
+                    <p class="platform-description">智能監控平台，支援多種設備接入</p>
+                    <a href="#" class="platform-website">官方網站</a>
+                </div>
+
+                <div class="platform-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">8</div>
+                        <div class="stat-label">總相機數</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">6</div>
+                        <div class="stat-label">活躍相機</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 平台卡片 3 -->
+            <div class="platform-card">
+                <div class="platform-header">
+                    <div>
+                        <div class="platform-name">測試平台</div>
+                        <div class="platform-code">TEST</div>
+                    </div>
+                    <div class="platform-status status-disabled">已停用</div>
+                </div>
+                
+                <div class="platform-info">
+                    <p class="platform-description">用於測試和開發的平台環境</p>
+                    <a href="#" class="platform-website">官方網站</a>
+                </div>
+
+                <div class="platform-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">2</div>
+                        <div class="stat-label">總相機數</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">活躍相機</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 平台卡片 4 -->
+            <div class="platform-card">
+                <div class="platform-header">
+                    <div>
+                        <div class="platform-name">雲端平台</div>
+                        <div class="platform-code">CLOUD</div>
+                    </div>
+                    <div class="platform-status status-active">啟用中</div>
+                </div>
+                
+                <div class="platform-info">
+                    <p class="platform-description">基於雲端技術的現代化平台</p>
+                    <a href="#" class="platform-website">官方網站</a>
+                </div>
+
+                <div class="platform-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">總相機數</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">10</div>
+                        <div class="stat-label">活躍相機</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 平台卡片 5 -->
+            <div class="platform-card">
+                <div class="platform-header">
+                    <div>
+                        <div class="platform-name">企業平台</div>
+                        <div class="platform-code">ENTERPRISE</div>
+                    </div>
+                    <div class="platform-status status-active">啟用中</div>
+                </div>
+                
+                <div class="platform-info">
+                    <p class="platform-description">專為企業級應用設計的平台</p>
+                    <a href="#" class="platform-website">官方網站</a>
+                </div>
+
+                <div class="platform-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">15</div>
+                        <div class="stat-label">總相機數</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">活躍相機</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 平台卡片 6 -->
+            <div class="platform-card">
+                <div class="platform-header">
+                    <div>
+                        <div class="platform-name">移動平台</div>
+                        <div class="platform-code">MOBILE</div>
+                    </div>
+                    <div class="platform-status status-active">啟用中</div>
+                </div>
+                
+                <div class="platform-info">
+                    <p class="platform-description">支援移動設備的輕量級平台</p>
+                    <a href="#" class="platform-website">官方網站</a>
+                </div>
+
+                <div class="platform-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">7</div>
+                        <div class="stat-label">總相機數</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">活躍相機</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
