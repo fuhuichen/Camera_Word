@@ -57,35 +57,23 @@ public class ImportService {
     /**
      * Start import job for uploaded file.
      */
-    public UUID processImportFile(MultipartFile file) {
-        try {
-            // Validate file
-            validateImportFile(file);
-            
-            // Create import job with a default user (for now)
-            ImportJob job = new ImportJob();
-            job.setFileName(file.getOriginalFilename());
-            job.setStatus(ImportJob.ImportJobStatus.QUEUED);
-            
-            // Get admin user as uploader
-            User adminUser = userRepository.findByEmail("admin@example.com").orElse(null);
-            if (adminUser != null) {
-                job.setUploaderUser(adminUser);
-            }
-            
-            job = importJobRepository.save(job);
-            
-            logger.info("Import job created: {} for file: {}", 
-                    job.getId(), file.getOriginalFilename());
-            
-            // Start async processing
-            processImportFileAsync(job.getId(), file);
-            
-            return job.getId();
-        } catch (Exception e) {
-            logger.error("Failed to create import job", e);
-            throw new RuntimeException("Failed to create import job: " + e.getMessage());
-        }
+    public UUID processImportFile(MultipartFile file) throws IOException {
+        // Validate file
+        validateImportFile(file);
+        
+        // Create import job
+        ImportJob job = new ImportJob();
+        job.setFileName(file.getOriginalFilename());
+        job.setStatus(ImportJob.ImportJobStatus.QUEUED);
+        job = importJobRepository.save(job);
+        
+        logger.info("Import job created: {} for file: {}", 
+                job.getId(), file.getOriginalFilename());
+        
+        // Start async processing
+        processImportFileAsync(job.getId(), file);
+        
+        return job.getId();
     }
     
     /**
@@ -278,7 +266,7 @@ public class ImportService {
                 camera.setModel(model.trim());
             }
             if (platform != null) {
-                camera.setTargetPlatformCode(platformCode.trim());
+                camera.setTargetPlatform(platform);
             }
             if (status != null && !status.trim().isEmpty()) {
                 camera.setStatus(Camera.CameraStatus.fromValue(status.trim().toLowerCase()));
@@ -288,7 +276,7 @@ public class ImportService {
             camera = new Camera();
             camera.setPublicId(cameraId.trim());
             camera.setModel(model != null ? model.trim() : null);
-            camera.setTargetPlatformCode(platform != null ? platformCode.trim() : null);
+            camera.setTargetPlatform(platform);
             camera.setStatus(status != null && !status.trim().isEmpty() ? 
                     Camera.CameraStatus.fromValue(status.trim().toLowerCase()) : 
                     Camera.CameraStatus.ACTIVE);

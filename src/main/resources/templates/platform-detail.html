@@ -152,7 +152,8 @@
             transform: translateY(-1px);
         }
 
-        .page-header {
+        /* Platform Detail Card */
+        .platform-detail-card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 1rem;
@@ -161,42 +162,18 @@
             box-shadow: var(--shadow-lg);
         }
 
-        .page-title {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .page-subtitle {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-        }
-
-        /* Platform Info Card */
-        .platform-info-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow-lg);
-        }
-
         .platform-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
 
-        .platform-name {
-            font-size: 1.5rem;
+        .platform-title {
+            font-size: 2rem;
             font-weight: 700;
             color: var(--dark-color);
+            margin-bottom: 0.5rem;
         }
 
         .platform-code {
@@ -209,7 +186,7 @@
         }
 
         .platform-status {
-            padding: 0.25rem 0.75rem;
+            padding: 0.5rem 1rem;
             border-radius: 1rem;
             font-size: 0.875rem;
             font-weight: 600;
@@ -223,77 +200,62 @@
         .platform-description {
             color: var(--text-muted);
             margin-bottom: 1rem;
-            line-height: 1.5;
+            line-height: 1.6;
+            font-size: 1.1rem;
         }
 
         .platform-website {
             color: var(--primary-color);
             text-decoration: none;
             font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .platform-website:hover {
             text-decoration: underline;
         }
 
-        /* Action Buttons */
-        .action-buttons {
-            display: flex;
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
-            margin-bottom: 2rem;
+            margin: 2rem 0;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .btn-secondary {
+        .stat-card {
             background: var(--light-color);
-            color: var(--text-muted);
-            border: 2px solid var(--border-color);
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            text-align: center;
         }
 
-        .btn-secondary:hover {
-            border-color: var(--primary-color);
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
             color: var(--primary-color);
+            margin-bottom: 0.5rem;
         }
 
-        /* Camera List */
-        .cameras-section {
+        .stat-label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Import Section */
+        .import-section {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 1rem;
-            padding: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
             box-shadow: var(--shadow-lg);
         }
 
         .section-title {
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
             color: var(--dark-color);
@@ -302,18 +264,78 @@
             gap: 0.5rem;
         }
 
+        .import-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .file-input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .file-input-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .file-input-label:hover {
+            background: var(--secondary-color);
+            transform: translateY(-1px);
+        }
+
+        .sample-link {
+            color: var(--info-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sample-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Cameras List */
+        .cameras-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
         .cameras-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1rem;
+            margin-top: 1rem;
         }
 
         .camera-card {
             background: var(--light-color);
             border-radius: 0.75rem;
-            padding: 1rem;
-            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+            box-shadow: var(--shadow-sm);
             transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
         }
 
         .camera-card:hover {
@@ -325,18 +347,20 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
         }
 
         .camera-id {
-            font-weight: 600;
+            font-size: 1.1rem;
+            font-weight: 700;
             color: var(--dark-color);
+            margin: 0;
         }
 
         .camera-status {
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.5rem;
-            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
             font-weight: 600;
         }
 
@@ -351,53 +375,8 @@
         }
 
         .camera-info {
-            font-size: 0.875rem;
             color: var(--text-muted);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 3rem;
-            color: var(--text-muted);
-        }
-
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-
-        /* File Upload */
-        .file-upload {
-            background: var(--light-color);
-            border: 2px dashed var(--border-color);
-            border-radius: 0.75rem;
-            padding: 2rem;
-            text-align: center;
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .file-upload:hover {
-            border-color: var(--primary-color);
-            background: rgba(102, 126, 234, 0.05);
-        }
-
-        .file-upload input[type="file"] {
-            display: none;
-        }
-
-        .file-upload-label {
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .file-upload-icon {
-            font-size: 2rem;
-            color: var(--primary-color);
+            font-size: 0.9rem;
         }
 
         /* Responsive */
@@ -416,12 +395,18 @@
                 justify-content: center;
             }
 
-            .cameras-grid {
+            .platform-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .stats-grid {
                 grid-template-columns: 1fr;
             }
 
-            .action-buttons {
-                flex-direction: column;
+            .cameras-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -460,31 +445,21 @@
             返回平台管理
         </a>
 
-        <div class="page-header">
-            <h1 class="page-title">
-                <i class="fas fa-globe"></i>
-                <span th:text="${platform.name}">平台名稱</span> - 相機管理
-            </h1>
-            <p class="page-subtitle">
-                管理 <span th:text="${platform.name}">平台</span> 下的所有相機設備
-            </p>
-        </div>
-
-        <!-- Platform Info -->
-        <div class="platform-info-card">
+        <!-- Platform Detail Card -->
+        <div class="platform-detail-card">
             <div class="platform-header">
                 <div>
-                    <div class="platform-name" th:text="${platform.name}">平台名稱</div>
+                    <h1 class="platform-title" th:text="${platform.name}">平台名稱</h1>
                     <div class="platform-code" th:text="${platform.code}">CODE</div>
                 </div>
                 <div class="platform-status" 
-                     th:classappend="${platform.status.name() == 'ACTIVE'} ? 'status-active' : 'status-disabled'"
-                     th:text="${platform.status.name() == 'ACTIVE'} ? '啟用中' : '已停用'">
+                     th:classappend="${platform.status == T(com.example.cameracloud.entity.Platform.PlatformStatus).ACTIVE} ? 'status-active' : 'status-disabled'"
+                     th:text="${platform.status == T(com.example.cameracloud.entity.Platform.PlatformStatus).ACTIVE} ? '啟用中' : '已停用'">
                     啟用中
                 </div>
             </div>
             
-            <div class="platform-description" th:text="${platform.description}">平台描述</div>
+            <p class="platform-description" th:text="${platform.description}">平台描述</p>
             <a th:if="${platform.websiteUrl}" 
                th:href="${platform.websiteUrl}" 
                class="platform-website" 
@@ -492,114 +467,79 @@
                 <i class="fas fa-external-link-alt"></i>
                 官方網站
             </a>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" th:text="${totalCameras}">0</div>
+                    <div class="stat-label">總相機數</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" th:text="${activeCameraCount}">0</div>
+                    <div class="stat-label">活躍相機</div>
+                </div>
+            </div>
         </div>
 
-        <!-- Action Buttons -->
-        <div class="action-buttons">
-            <button class="btn-primary" onclick="document.getElementById('fileInput').click()">
+        <!-- Import Section -->
+        <div class="import-section">
+            <h2 class="section-title">
                 <i class="fas fa-upload"></i>
                 匯入相機 (Excel)
-            </button>
-            <a href="/view?camera_id=CAM_001" class="btn-secondary">
-                <i class="fas fa-eye"></i>
-                測試查看
-            </a>
-        </div>
-
-        <!-- File Upload -->
-        <div class="file-upload">
-            <label for="fileInput" class="file-upload-label">
-                <i class="fas fa-cloud-upload-alt file-upload-icon"></i>
-                <div>
-                    <strong>點擊選擇 Excel 檔案</strong>
-                    <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem;">
-                        支援 .xlsx 和 .csv 格式
-                    </div>
+            </h2>
+            <div class="import-form">
+                <div class="file-input-wrapper">
+                    <input type="file" id="file-input" class="file-input" accept=".xlsx,.xls,.csv">
+                    <label for="file-input" class="file-input-label">
+                        <i class="fas fa-file-excel"></i>
+                        選擇 Excel 檔案
+                    </label>
                 </div>
-            </label>
-            <input type="file" id="fileInput" accept=".xlsx,.csv" onchange="handleFileUpload(this)">
+                <a href="/sample_data/cameras_sample.xlsx" download class="sample-link">
+                    <i class="fas fa-download"></i>
+                    下載範例 Excel
+                </a>
+            </div>
         </div>
 
-        <!-- Camera List -->
+        <!-- Cameras List -->
         <div class="cameras-section">
             <h2 class="section-title">
                 <i class="fas fa-video"></i>
-                相機列表 (<span th:text="${totalCameras}">0</span> 台)
+                相機列表
             </h2>
-            
-            <div th:if="${cameras.empty}" class="empty-state">
-                <i class="fas fa-video"></i>
-                <h3>暫無相機</h3>
-                <p>請使用上方按鈕匯入相機資料</p>
-            </div>
-            
-            <div th:if="${!cameras.empty}" class="cameras-grid">
-                <div class="camera-card" th:each="camera : ${cameras}">
+            <div class="cameras-grid" th:if="${!platformCameras.empty}">
+                <div class="camera-card" th:each="camera : ${platformCameras}">
                     <div class="camera-header">
-                        <div class="camera-id" th:text="${camera.publicId}">CAM_001</div>
+                        <h3 class="camera-id" th:text="${camera.publicId}">CAM_001</h3>
                         <div class="camera-status" 
-                             th:classappend="${camera.status.name() == 'ACTIVE'} ? 'status-active' : 'status-disabled'"
-                             th:text="${camera.status.name() == 'ACTIVE'} ? '正常' : '停用'">
-                            正常
+                             th:classappend="${camera.status == T(com.example.cameracloud.entity.Camera.CameraStatus).ACTIVE} ? 'status-active' : 'status-disabled'"
+                             th:text="${camera.status == T(com.example.cameracloud.entity.Camera.CameraStatus).ACTIVE} ? '啟用中' : '已停用'">
+                            啟用中
                         </div>
                     </div>
                     <div class="camera-info">
-                        <div th:if="${camera.model}">
-                            <strong>型號:</strong> <span th:text="${camera.model}">Model</span>
-                        </div>
-                        <div>
-                            <strong>重定向:</strong> 
-                            <span th:text="${camera.redirectEnabled} ? '啟用' : '停用'">啟用</span>
-                        </div>
-                        <div>
-                            <strong>建立時間:</strong> 
-                            <span th:text="${#temporals.format(camera.createdAt, 'yyyy-MM-dd HH:mm')}">2024-01-01 12:00</span>
-                        </div>
+                        <p th:if="${camera.model}" th:text="'型號: ' + ${camera.model}">型號: Model A</p>
+                        <p th:text="'重定向: ' + ${camera.redirectEnabled ? '啟用' : '停用'}">重定向: 啟用</p>
                     </div>
                 </div>
+            </div>
+            <div th:if="${platformCameras.empty}" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                <i class="fas fa-video" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                <p>此平台暫無相機，請使用上方匯入功能添加相機。</p>
             </div>
         </div>
     </div>
 
     <script>
-        function handleFileUpload(input) {
-            const file = input.files[0];
+        // File upload handling
+        document.getElementById('file-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
             if (file) {
-                const formData = new FormData();
-                formData.append('file', file);
-                
-                // Show loading state
-                const button = document.querySelector('.btn-primary');
-                const originalText = button.innerHTML;
-                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 匯入中...';
-                button.disabled = true;
-                
-                fetch('/api/v1/admin/cameras/import', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.jobId) {
-                        alert('檔案已開始處理，請稍後刷新頁面查看結果');
-                        setTimeout(() => {
-                            location.reload();
-                        }, 2000);
-                    } else {
-                        alert('匯入失敗，請檢查檔案格式');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('匯入失敗，請重試');
-                })
-                .finally(() => {
-                    button.innerHTML = originalText;
-                    button.disabled = false;
-                    input.value = '';
-                });
+                // Here you would implement the actual file upload logic
+                console.log('Selected file:', file.name);
+                // You can add AJAX upload logic here
             }
-        }
+        });
 
         // Add loading states to buttons
         document.querySelectorAll('a[href]').forEach(link => {
