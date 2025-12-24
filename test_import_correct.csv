@@ -1,0 +1,8 @@
+camera_id,platform_code,model,status
+TEST_CAM_001,dk,测试相机型号 A,active
+TEST_CAM_002,dk,测试相机型号 B,active
+TEST_CAM_003,duixin,测试相机型号 C,active
+TEST_CAM_004,duixin,测试相机型号 D,disabled
+TEST_CAM_005,dk,测试相机型号 E,active
+
+

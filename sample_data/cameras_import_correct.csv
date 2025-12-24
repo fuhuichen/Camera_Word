@@ -1,0 +1,12 @@
+camera_id,model,platform_code,status
+CAM_DK_001,Model-A1,dk,active
+CAM_DK_002,Model-A2,dk,active
+CAM_DK_003,Model-B1,dk,active
+CAM_DK_004,Model-B2,dk,active
+CAM_DK_005,Model-C1,dk,active
+CAM_DUIXIN_001,Model-X1,duixin,active
+CAM_DUIXIN_002,Model-X2,duixin,active
+CAM_DUIXIN_003,Model-Y1,duixin,active
+CAM_DUIXIN_004,Model-Y2,duixin,active
+CAM_DUIXIN_005,Model-Z1,duixin,active
+
