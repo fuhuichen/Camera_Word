@@ -507,8 +507,8 @@
                 <i class="fas fa-video"></i>
                 相機列表
             </h2>
-            <div class="cameras-grid" th:if="${!platformCameras.empty}">
-                <div class="camera-card" th:each="camera : ${platformCameras}">
+            <div class="cameras-grid" th:if="${cameras != null && !cameras.empty}">
+                <div class="camera-card" th:each="camera : ${cameras}">
                     <div class="camera-header">
                         <h3 class="camera-id" th:text="${camera.publicId}">CAM_001</h3>
                         <div class="camera-status" 
@@ -523,7 +523,7 @@
                     </div>
                 </div>
             </div>
-            <div th:if="${platformCameras.empty}" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+            <div th:if="${cameras == null || cameras.empty}" style="text-align: center; color: var(--text-muted); padding: 2rem;">
                 <i class="fas fa-video" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
                 <p>此平台暫無相機，請使用上方匯入功能添加相機。</p>
             </div>

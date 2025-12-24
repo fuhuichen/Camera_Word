@@ -17,6 +17,7 @@ import java.util.UUID;
 
 @Component
 @Profile("dev")
+@org.springframework.core.annotation.Order(1)
 public class DataInitializer implements CommandLineRunner {
     
     private static final Logger logger = LoggerFactory.getLogger(DataInitializer.class);
@@ -93,28 +94,9 @@ public class DataInitializer implements CommandLineRunner {
     }
     
     private void createTestCameras() {
-        if (cameraRepository.count() == 0) {
-            // DK Test Camera
-            Camera dkTestCam = new Camera();
-            dkTestCam.setPublicId("DK_TEST_CAM");
-            dkTestCam.setModel("DK 测试相机");
-            dkTestCam.setTargetPlatformCode("dk");
-            dkTestCam.setStatus(Camera.CameraStatus.ACTIVE);
-            dkTestCam.setRedirectEnabled(true);
-            dkTestCam.setIsTestDevice(true);
-            cameraRepository.save(dkTestCam);
-            
-            // 兑心 Test Camera
-            Camera duixinTestCam = new Camera();
-            duixinTestCam.setPublicId("DUIXIN_TEST_CAM");
-            duixinTestCam.setModel("兑心测试相机");
-            duixinTestCam.setTargetPlatformCode("duixin");
-            duixinTestCam.setStatus(Camera.CameraStatus.ACTIVE);
-            duixinTestCam.setRedirectEnabled(true);
-            duixinTestCam.setIsTestDevice(true);
-            cameraRepository.save(duixinTestCam);
-            
-            logger.info("Created test cameras: DK_TEST_CAM, DUIXIN_TEST_CAM");
-        }
+        // Camera initialization is now handled by CameraInitializer
+        // This method is kept for backward compatibility but does nothing
+        // as CameraInitializer runs after this and handles all camera initialization
+        logger.debug("Camera initialization will be handled by CameraInitializer");
     }
 }

@@ -787,11 +787,11 @@
             Insight Software Portals
         </div>
         <div class="navbar-menu">
-            <a href="/dashboard" th:classappend="${!#strings.isEmpty(selectedPlatformCode) ? '' : 'active'}">
+            <a href="/dashboard" class="active">
                 <i class="fas fa-tachometer-alt"></i>
                 控制台
             </a>
-            <a href="/dashboard/platform" th:classappend="${!#strings.isEmpty(selectedPlatformCode) ? 'active' : ''}">
+            <a href="/platforms">
                 <i class="fas fa-globe"></i>
                 平台管理
             </a>

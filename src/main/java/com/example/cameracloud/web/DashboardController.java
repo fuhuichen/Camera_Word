@@ -11,10 +11,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -78,7 +81,10 @@ public class DashboardController {
     }
     
     @GetMapping("/dashboard/platform")
-    public String dashboardPlatform(Authentication authentication, Model model) {
+    public String dashboardPlatform(
+            Authentication authentication, 
+            Model model,
+            @RequestParam(required = false) String platformCode) {
         if (authentication == null) {
             return "redirect:/login";
         }
@@ -93,18 +99,53 @@ public class DashboardController {
         List<Platform> allPlatforms = platformService.findAll();
         List<Platform> activePlatforms = platformService.findAllActive();
         
-        // Get camera statistics for each platform
+        // Get camera statistics
         List<Camera> allCameras = cameraService.findWithFilters(null, null, null, null);
         List<Camera> activeCameras = cameraService.findWithFilters(null, Camera.CameraStatus.ACTIVE, null, null);
         
+        // Calculate statistics
+        int totalPlatforms = allPlatforms.size();
+        int activePlatformCount = activePlatforms.size();
+        int totalCameraCount = allCameras.size();
+        int activeCameraCount = activeCameras.size();
+        int disabledCameraCount = allCameras.size() - activeCameraCount;
+        
+        // Calculate uptime percentage
+        double uptimePercentage = totalCameraCount > 0 ? (double) activeCameraCount / totalCameraCount * 100 : 0;
+        
+        // Get current time
+        String currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        
+        // Base attributes
         model.addAttribute("username", username);
         model.addAttribute("role", role);
-        model.addAttribute("platforms", allPlatforms);
-        model.addAttribute("activePlatforms", activePlatforms);
-        model.addAttribute("totalCameras", allCameras.size());
-        model.addAttribute("activeCameras", activeCameras.size());
+        model.addAttribute("totalPlatforms", totalPlatforms);
+        model.addAttribute("activePlatformCount", activePlatformCount);
+        model.addAttribute("totalCameras", totalCameraCount);
+        model.addAttribute("activeCameraCount", activeCameraCount);
+        model.addAttribute("disabledCameraCount", disabledCameraCount);
+        model.addAttribute("uptimePercentage", String.format("%.1f", uptimePercentage));
+        model.addAttribute("currentTime", currentTime);
+        model.addAttribute("platforms", activePlatforms);
+        model.addAttribute("allPlatforms", allPlatforms);
+        model.addAttribute("recentCameras", activeCameras.stream().limit(5).collect(Collectors.toList()));
         
-        return "platforms";
+        // If platformCode is provided, add platform specific information
+        if (platformCode != null && !platformCode.isEmpty()) {
+            Platform platform = platformService.findByCode(platformCode);
+            if (platform != null) {
+                List<Camera> platformCameras = cameraService.findWithFilters(platformCode, null, null, null);
+                model.addAttribute("selectedPlatformCode", platformCode);
+                model.addAttribute("platformInfo", platform);
+                model.addAttribute("platformCameras", platformCameras);
+            } else {
+                model.addAttribute("selectedPlatformCode", "");
+            }
+        } else {
+            model.addAttribute("selectedPlatformCode", "");
+        }
+        
+        return "dashboard";
     }
     
     @GetMapping("/platforms")
@@ -123,7 +164,21 @@ public class DashboardController {
         List<Platform> allPlatforms = platformService.findAll();
         List<Platform> activePlatforms = platformService.findAllActive();
         
-        // Get camera statistics for each platform
+        // Get camera statistics for each platform (including test cameras)
+        Map<String, Integer> platformTotalCameras = new HashMap<>();
+        Map<String, Integer> platformActiveCameras = new HashMap<>();
+        
+        for (Platform platform : allPlatforms) {
+            List<Camera> platformCameras = cameraService.findByTargetPlatformCode(platform.getCode());
+            int totalCount = platformCameras.size();
+            int activeCount = (int) platformCameras.stream()
+                    .filter(camera -> camera.getStatus() == Camera.CameraStatus.ACTIVE)
+                    .count();
+            platformTotalCameras.put(platform.getCode(), totalCount);
+            platformActiveCameras.put(platform.getCode(), activeCount);
+        }
+        
+        // Get global camera statistics
         List<Camera> allCameras = cameraService.findWithFilters(null, null, null, null);
         List<Camera> activeCameras = cameraService.findWithFilters(null, Camera.CameraStatus.ACTIVE, null, null);
         
@@ -131,6 +186,8 @@ public class DashboardController {
         model.addAttribute("role", role);
         model.addAttribute("platforms", allPlatforms);
         model.addAttribute("activePlatforms", activePlatforms);
+        model.addAttribute("platformTotalCameras", platformTotalCameras);
+        model.addAttribute("platformActiveCameras", platformActiveCameras);
         model.addAttribute("totalCameras", allCameras.size());
         model.addAttribute("activeCameras", activeCameras.size());
         
@@ -155,8 +212,8 @@ public class DashboardController {
             return "redirect:/platforms";
         }
         
-        // Get cameras for this platform
-        List<Camera> platformCameras = cameraService.findWithFilters(code, null, null, null);
+        // Get cameras for this platform (including test devices)
+        List<Camera> platformCameras = cameraService.findByTargetPlatformCode(code);
         List<Camera> activeCameras = platformCameras.stream()
                 .filter(camera -> camera.getStatus() == Camera.CameraStatus.ACTIVE)
                 .collect(Collectors.toList());

@@ -57,18 +57,29 @@ public class ImportService {
     /**
      * Start import job for uploaded file.
      */
-    public UUID processImportFile(MultipartFile file) throws IOException {
+    public UUID processImportFile(MultipartFile file, String username) throws IOException {
         // Validate file
         validateImportFile(file);
+        
+        // Get or create uploader user
+        User uploaderUser = userRepository.findByEmail(username + "@example.com")
+                .orElseGet(() -> {
+                    User newUser = new User();
+                    newUser.setEmail(username + "@example.com");
+                    newUser.setDisplayName(username);
+                    newUser.setRole(User.UserRole.MAIN_ADMIN);
+                    return userRepository.save(newUser);
+                });
         
         // Create import job
         ImportJob job = new ImportJob();
         job.setFileName(file.getOriginalFilename());
         job.setStatus(ImportJob.ImportJobStatus.QUEUED);
+        job.setUploaderUser(uploaderUser);
         job = importJobRepository.save(job);
         
-        logger.info("Import job created: {} for file: {}", 
-                job.getId(), file.getOriginalFilename());
+        logger.info("Import job created: {} for file: {} by user: {}", 
+                job.getId(), file.getOriginalFilename(), username);
         
         // Start async processing
         processImportFileAsync(job.getId(), file);
@@ -125,13 +136,20 @@ public class ImportService {
             importJobRepository.save(job);
             
             List<String> errors = new ArrayList<>();
-            int successCount = 0;
-            int totalRows = 0;
+            int[] counts; // [totalRows, successCount]
             
             if (file.getOriginalFilename().endsWith(".xlsx")) {
-                processExcelFile(file, job, errors);
+                counts = processExcelFile(file, job, errors);
             } else {
-                processCsvFile(file, job, errors);
+                counts = processCsvFile(file, job, errors);
+            }
+            
+            int totalRows = counts[0];
+            int successCount = counts[1];
+            
+            // Log errors for debugging
+            if (!errors.isEmpty()) {
+                logger.warn("Import errors for job {}: {}", jobId, String.join("; ", errors));
             }
             
             // Update job status
@@ -159,8 +177,12 @@ public class ImportService {
     
     /**
      * Process Excel file.
+     * @return int array [totalRows, successCount]
      */
-    private void processExcelFile(MultipartFile file, ImportJob job, List<String> errors) throws IOException {
+    private int[] processExcelFile(MultipartFile file, ImportJob job, List<String> errors) throws IOException {
+        int totalRows = 0;
+        int successCount = 0;
+        
         try (InputStream inputStream = file.getInputStream();
              Workbook workbook = new XSSFWorkbook(inputStream)) {
             
@@ -175,19 +197,28 @@ public class ImportService {
                 // Skip header row
                 if (rowNum == 1) continue;
                 
+                totalRows++;
                 try {
                     processCameraRow(row, job, rowNum);
+                    successCount++;
                 } catch (Exception e) {
                     errors.add("Row " + rowNum + ": " + e.getMessage());
+                    logger.debug("Row {} import failed: {}", rowNum, e.getMessage());
                 }
             }
         }
+        
+        return new int[]{totalRows, successCount};
     }
     
     /**
      * Process CSV file.
+     * @return int array [totalRows, successCount]
      */
-    private void processCsvFile(MultipartFile file, ImportJob job, List<String> errors) throws IOException {
+    private int[] processCsvFile(MultipartFile file, ImportJob job, List<String> errors) throws IOException {
+        int totalRows = 0;
+        int successCount = 0;
+        
         CsvMapper mapper = new CsvMapper();
         CsvSchema schema = CsvSchema.emptySchema().withHeader();
         
@@ -199,15 +230,20 @@ public class ImportService {
             int rowNum = 1; // Start from 1, header is row 0
             while (iterator.hasNext()) {
                 rowNum++;
+                totalRows++;
                 Map<String, String> row = iterator.next();
                 
                 try {
                     processCameraRow(row, job, rowNum);
+                    successCount++;
                 } catch (Exception e) {
                     errors.add("Row " + rowNum + ": " + e.getMessage());
+                    logger.debug("Row {} import failed: {}", rowNum, e.getMessage());
                 }
             }
         }
+        
+        return new int[]{totalRows, successCount};
     }
     
     /**

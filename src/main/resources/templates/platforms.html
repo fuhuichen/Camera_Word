@@ -449,7 +449,7 @@
             Insight Software Portals
         </div>
         <div class="navbar-menu">
-            <a href="/dashboard">
+            <a href="/dashboard" class="">
                 <i class="fas fa-tachometer-alt"></i>
                 控制台
             </a>
@@ -487,41 +487,49 @@
         </div>
 
         <div class="platforms-grid">
-            <div class="platform-card" th:each="platform : ${platforms}">
-                <div class="platform-header">
-                    <div>
-                        <div class="platform-name" th:text="${platform.name}">平台名稱</div>
-                        <div class="platform-code" th:text="${platform.code}">CODE</div>
+            <a th:each="platform : ${platforms}" 
+               th:href="@{/platforms/{code}(code=${platform.code})}" 
+               class="platform-card-link">
+                <div class="platform-card">
+                    <div class="platform-header">
+                        <div>
+                            <div class="platform-name" th:text="${platform.name}">平台名稱</div>
+                            <div class="platform-code" th:text="${platform.code}">CODE</div>
+                        </div>
+                        <div class="platform-status" 
+                             th:classappend="${platform.status.name() == 'ACTIVE'} ? 'status-active' : 'status-disabled'"
+                             th:text="${platform.status.name() == 'ACTIVE'} ? '啟用中' : '已停用'">
+                            啟用中
+                        </div>
                     </div>
-                    <div class="platform-status" 
-                         th:classappend="${platform.status.name() == 'ACTIVE'} ? 'status-active' : 'status-disabled'"
-                         th:text="${platform.status.name() == 'ACTIVE'} ? '啟用中' : '已停用'">
-                        啟用中
+                    
+                    <div class="platform-info">
+                        <p class="platform-description" th:text="${platform.description}">平台描述</p>
+                        <span th:if="${platform.websiteUrl}" 
+                              class="platform-website" 
+                              onclick="event.stopPropagation(); window.open('${platform.websiteUrl}', '_blank');">
+                            <i class="fas fa-external-link-alt"></i>
+                            官方網站
+                        </span>
                     </div>
-                </div>
-                
-                <div class="platform-info">
-                    <p class="platform-description" th:text="${platform.description}">平台描述</p>
-                    <a th:if="${platform.websiteUrl}" 
-                       th:href="${platform.websiteUrl}" 
-                       class="platform-website" 
-                       target="_blank">
-                        <i class="fas fa-external-link-alt"></i>
-                        官方網站
-                    </a>
-                </div>
 
-                <div class="platform-stats">
-                    <div class="stat-item">
-                        <div class="stat-value" th:text="${totalCameras}">0</div>
-                        <div class="stat-label">總相機數</div>
+                    <div class="platform-stats">
+                        <div class="stat-item">
+                            <div class="stat-value" th:text="${platformTotalCameras != null ? platformTotalCameras[platform.code] : 0}">0</div>
+                            <div class="stat-label">總相機數</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" th:text="${platformActiveCameras != null ? platformActiveCameras[platform.code] : 0}">0</div>
+                            <div class="stat-label">活躍相機</div>
+                        </div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-value" th:text="${activeCameras}">0</div>
-                        <div class="stat-label">活躍相機</div>
+
+                    <div class="platform-card-footer">
+                        <span>查看詳情</span>
+                        <i class="fas fa-arrow-right"></i>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 

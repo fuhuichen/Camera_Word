@@ -28,7 +28,8 @@ public class CameraImportController {
         }
         
         try {
-            UUID jobId = importService.processImportFile(file);
+            String username = authentication.getName();
+            UUID jobId = importService.processImportFile(file, username);
             return ResponseEntity.ok(new ImportJobResponse(jobId));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
